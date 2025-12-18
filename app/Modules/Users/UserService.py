@@ -10,6 +10,7 @@ from .Dto.UserResponseDTO import UserResponseDTO
 from .IUserRepository import IUserRepository
 from .UserMapper import UserMapper
 from .UserSpecification import UserSpecification
+from .UserValidator import UserValidator
 
 
 class IUserService:
@@ -41,6 +42,8 @@ class UserService:
 
     async def Create(self, dto: CreateUserRequestDTO) -> UserResponseDTO:
         try:
+            UserValidator.ValidateCreate(dto)
+
             existed = await self.Repository.GetByEmail(dto.Email)
             if existed:
                 raise AppException("Email already exists")
@@ -89,6 +92,8 @@ class UserService:
 
     async def Update(self, user_id: int, dto: UpdateUserRequestDTO) -> UserResponseDTO:
         try:
+            UserValidator.ValidateUpdate(dto)
+
             user = await self.Repository.GetById(user_id)
 
             if dto.Email:
