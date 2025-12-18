@@ -1,6 +1,6 @@
 from app.Core.Utils.QueryRequest import QuerySpecification, SortOption
 from app.Infrastructure.Database.QuerySpecificationBuilder import (
-    SqlAlchemySpecificationBuilder,
+    SpecificationBuilder,
 )
 from app.Infrastructure.Database.Schema.UserSchema import UserSchema
 
@@ -13,7 +13,7 @@ class UserSpecification:
         "role": UserSchema.role,
     }
 
-    Builder = SqlAlchemySpecificationBuilder(
+    Builder = SpecificationBuilder(
         UserSchema,
         sortable_columns=SortableFields,
         searchable_columns=[UserSchema.email, UserSchema.name],

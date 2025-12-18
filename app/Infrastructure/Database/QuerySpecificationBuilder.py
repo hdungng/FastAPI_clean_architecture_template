@@ -5,7 +5,7 @@ from sqlalchemy import asc, desc, func, or_, select
 from app.Core.Utils.QueryRequest import Pageable, QuerySpecification
 
 
-class SqlAlchemySpecificationBuilder:
+class SpecificationBuilder:
     def __init__(
         self,
         model,
