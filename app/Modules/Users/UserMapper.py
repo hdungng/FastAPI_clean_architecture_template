@@ -1,3 +1,4 @@
+from app.Infrastructure.Database.Schema.UserSchema import UserSchema
 from .Dto.CreateUserRequestDTO import CreateUserRequestDTO
 from .Dto.UpdateUserRequestDTO import UpdateUserRequestDTO
 from .Dto.UserResponseDTO import UserResponseDTO
@@ -39,3 +40,31 @@ class UserMapper:
     @staticmethod
     def ToResponseList(users: list[User]) -> list[UserResponseDTO]:
         return [UserMapper.ToResponse(user) for user in users]
+
+    @staticmethod
+    def FromSchema(model: UserSchema) -> User:
+        return User(
+            Id=model.id,
+            Email=model.email,
+            Name=model.name,
+            HashedPassword=model.hashed_password,
+            Role=model.role,
+        )
+
+    @staticmethod
+    def ToCreateValues(user: User) -> dict:
+        return {
+            "email": user.Email,
+            "name": user.Name,
+            "role": user.Role,
+            "hashed_password": user.HashedPassword,
+        }
+
+    @staticmethod
+    def ToUpdateValues(user: User) -> dict:
+        return {
+            "email": user.Email,
+            "name": user.Name,
+            "role": user.Role,
+            "hashed_password": user.HashedPassword,
+        }

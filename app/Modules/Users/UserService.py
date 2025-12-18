@@ -1,19 +1,30 @@
 from app.Core.AppException import AppException
 from app.Core.CurrentUser import CurrentUser
 from app.Core.IUnitOfWork import IUnitOfWork
+from app.Core.Response.APIResponse import PagedResult
 from app.Core.Utils.CrytoUtil import CryptoUtil
+from app.Core.Utils.QueryRequest import Pageable
 from .Dto.CreateUserRequestDTO import CreateUserRequestDTO
 from .Dto.UpdateUserRequestDTO import UpdateUserRequestDTO
 from .Dto.UserResponseDTO import UserResponseDTO
 from .IUserRepository import IUserRepository
 from .UserMapper import UserMapper
+from .UserSpecification import UserSpecification
 
 
 class IUserService:
     async def Create(self, dto: CreateUserRequestDTO) -> UserResponseDTO: ...
     async def GetMe(self, current: CurrentUser) -> UserResponseDTO: ...
     async def GetById(self, user_id: int) -> UserResponseDTO: ...
-    async def GetAll(self) -> list[UserResponseDTO]: ...
+    async def GetAll(
+        self,
+        page: int,
+        page_size: int,
+        search: str | None,
+        role: str | None,
+        sort_by: str,
+        sort_direction: str,
+    ) -> PagedResult: ...
     async def Update(self, user_id: int, dto: UpdateUserRequestDTO) -> UserResponseDTO: ...
     async def Delete(self, user_id: int) -> None: ...
 
@@ -54,9 +65,27 @@ class UserService:
         user = await self.Repository.GetById(user_id)
         return UserMapper.ToResponse(user)
 
-    async def GetAll(self) -> list[UserResponseDTO]:
-        users = await self.Repository.GetAll()
-        return UserMapper.ToResponseList(users)
+    async def GetAll(
+        self,
+        page: int,
+        page_size: int,
+        search: str | None,
+        role: str | None,
+        sort_by: str,
+        sort_direction: str,
+    ) -> PagedResult:
+        pageable = Pageable.Create(page, page_size)
+        sort = UserSpecification.CreateSort(sort_by, sort_direction)
+        spec = UserSpecification.Create(search=search, role=role, sort=sort)
+
+        users, total = await self.Repository.GetAll(spec=spec, pageable=pageable)
+
+        return PagedResult(
+            Items=UserMapper.ToResponseList(users),
+            Total=total,
+            Page=pageable.Page,
+            PageSize=pageable.PageSize,
+        )
 
     async def Update(self, user_id: int, dto: UpdateUserRequestDTO) -> UserResponseDTO:
         try:

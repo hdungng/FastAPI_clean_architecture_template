@@ -1,5 +1,8 @@
 from typing import Protocol
+
+from app.Core.Utils.QueryRequest import Pageable, QuerySpecification
 from .Entity.User import User
+
 
 class IUserRepository(Protocol):
 
@@ -12,7 +15,9 @@ class IUserRepository(Protocol):
     async def GetByEmail(self, email: str) -> User | None:
         ...
 
-    async def GetAll(self) -> list[User]:
+    async def GetAll(
+        self, spec: QuerySpecification, pageable: Pageable
+    ) -> tuple[list[User], int]:
         ...
 
     async def Update(self, user: User) -> User:

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from app.Core.CurrentUser import CurrentUser
 from app.Core.Response import ResponseFactory
@@ -25,8 +25,21 @@ async def Create(
 async def GetAll(
     _: CurrentUser = Depends(Authorize(Role="Admin")),
     service: IUserService = Depends(GetUserService),
+    page: int = Query(1, ge=1, alias="Page"),
+    page_size: int = Query(10, ge=1, le=100, alias="PageSize"),
+    search: str | None = Query(None, alias="Search"),
+    role: str | None = Query(None, alias="Role"),
+    sort_by: str = Query("id", alias="SortBy"),
+    sort_direction: str = Query("asc", alias="SortDirection"),
 ):
-    users = await service.GetAll()
+    users = await service.GetAll(
+        page=page,
+        page_size=page_size,
+        search=search,
+        role=role,
+        sort_by=sort_by,
+        sort_direction=sort_direction,
+    )
     return ResponseFactory.Ok(users)
 
 
