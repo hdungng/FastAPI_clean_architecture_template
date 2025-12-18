@@ -1,6 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
 
 class UserResponseDTO(BaseModel):
-    id: int
-    name: str
-    email: str
+    Id: int
+    Name: str
+    Email: EmailStr
+    Role: str
