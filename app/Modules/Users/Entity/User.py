@@ -4,6 +4,6 @@ from dataclasses import dataclass
 class User:
     Id: int | None
     Email: str
-    Name: str
-    HashedPassword: str
-    Role: str
+    Name: str | None = None
+    HashedPassword: str = ""
+    Role: str = "User"

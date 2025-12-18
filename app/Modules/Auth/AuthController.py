@@ -8,7 +8,6 @@ from .Dto.AuthDTO import (
     LoginRequest,
     RegisterRequest,
     TokenResponse,
-    RefreshTokenRequest,
 )
 from .Dependencies import GetAuthService
 from .AuthService import AuthService
@@ -30,8 +29,8 @@ async def Register(
     request: RegisterRequest,
     service: AuthService = Depends(GetAuthService),
 ):
-    user = await service.Register(request)
-    return ResponseFactory.Created(user)
+    token = await service.Register(request)
+    return ResponseFactory.Created(token)
 
 
 @router.get("/me")
@@ -45,5 +44,4 @@ async def GetMe(
 async def Logout(
     _: CurrentUser = Depends(Authorize()),
 ):
-    # Nếu dùng blacklist / redis → gọi service
     return ResponseFactory.Ok(message="Logged out")

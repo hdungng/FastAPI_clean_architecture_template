@@ -8,3 +8,6 @@ class IUserRepository(Protocol):
 
     async def GetById(self, id: int):
         ...
+
+    async def GetByEmail(self, email: str) -> User | None:
+        ...
