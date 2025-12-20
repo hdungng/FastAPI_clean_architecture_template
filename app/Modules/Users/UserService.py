@@ -84,10 +84,10 @@ class UserService:
         users, total = await self.Repository.GetAll(spec=spec, pageable=pageable)
 
         return PagedResult(
-            Items=UserMapper.ToResponseList(users),
-            Total=total,
-            Page=pageable.Page,
-            PageSize=pageable.PageSize,
+            items=UserMapper.ToResponseList(users),
+            total=total,
+            page=pageable.Page,
+            page_size=pageable.PageSize,
         )
 
     async def Update(self, user_id: int, dto: UpdateUserRequestDTO) -> UserResponseDTO:

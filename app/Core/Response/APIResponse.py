@@ -1,17 +1,18 @@
-from typing import Generic, TypeVar, Optional
-from pydantic import BaseModel
+from typing import Any, Generic, Optional, TypeVar
+from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
 
 class APIResponse(BaseModel, Generic[T]):
-    Success: bool
-    Data: Optional[T] = None
-    Message: Optional[str] = None
+    success: bool
+    data: Optional[T] = None
+    message: Optional[str] = None
+    meta: dict[str, Any] = Field(default_factory=dict)
 
 
 class PagedResult(BaseModel):
-    Items: list
-    Total: int
-    Page: int
-    PageSize: int
+    items: list
+    total: int
+    page: int
+    page_size: int

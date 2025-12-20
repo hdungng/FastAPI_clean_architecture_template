@@ -1,69 +1,92 @@
-from fastapi.responses import JSONResponse
 from fastapi import status
+from fastapi.responses import JSONResponse
 from typing import Any
 
-from .APIResponse import APIResponse
+from .APIResponse import APIResponse, PagedResult
 
 
 class ResponseFactory:
 
     @staticmethod
-    def Ok(data: Any = None, message: str | None = None):
+    def _create_response(
+        success: bool,
+        status_code: int,
+        data: Any = None,
+        message: str | None = None,
+        meta: dict | None = None,
+    ) -> JSONResponse:
+        response_meta = meta or {}
+
+        if isinstance(data, PagedResult):
+            pagination = {
+                "page": data.page,
+                "pageSize": data.page_size,
+                "total": data.total,
+            }
+            response_meta = {**response_meta, "pagination": pagination}
+            data = data.items
+
         return JSONResponse(
+            status_code=status_code,
+            content=APIResponse(
+                success=success,
+                data=data,
+                message=message,
+                meta=response_meta,
+            ).model_dump(),
+        )
+
+    @staticmethod
+    def Ok(data: Any = None, message: str | None = "OK", meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=True,
             status_code=status.HTTP_200_OK,
-            content=APIResponse(
-                Success=True,
-                Data=data,
-                Message=message,
-            ).model_dump(),
+            data=data,
+            message=message,
+            meta=meta,
         )
 
     @staticmethod
-    def Created(data: Any):
-        return JSONResponse(
+    def Created(data: Any, meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=True,
             status_code=status.HTTP_201_CREATED,
-            content=APIResponse(
-                Success=True,
-                Data=data,
-            ).model_dump(),
+            data=data,
+            meta=meta,
         )
 
     @staticmethod
-    def BadRequest(message: str):
-        return JSONResponse(
+    def BadRequest(message: str, meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=False,
             status_code=status.HTTP_400_BAD_REQUEST,
-            content=APIResponse(
-                Success=False,
-                Message=message,
-            ).model_dump(),
+            message=message,
+            meta=meta,
         )
 
     @staticmethod
-    def Unauthorized(message: str = "Unauthorized"):
-        return JSONResponse(
+    def Unauthorized(message: str = "Unauthorized", meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=False,
             status_code=status.HTTP_401_UNAUTHORIZED,
-            content=APIResponse(
-                Success=False,
-                Message=message,
-            ).model_dump(),
+            message=message,
+            meta=meta,
         )
 
     @staticmethod
-    def Forbidden(message: str = "Forbidden"):
-        return JSONResponse(
+    def Forbidden(message: str = "Forbidden", meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=False,
             status_code=status.HTTP_403_FORBIDDEN,
-            content=APIResponse(
-                Success=False,
-                Message=message,
-            ).model_dump(),
+            message=message,
+            meta=meta,
         )
 
     @staticmethod
-    def NotFound(message: str = "Not found"):
-        return JSONResponse(
+    def NotFound(message: str = "Not found", meta: dict | None = None):
+        return ResponseFactory._create_response(
+            success=False,
             status_code=status.HTTP_404_NOT_FOUND,
-            content=APIResponse(
-                Success=False,
-                Message=message,
-            ).model_dump(),
+            message=message,
+            meta=meta,
         )
