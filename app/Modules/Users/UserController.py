@@ -7,7 +7,7 @@ from app.Modules.Users.Dto.CreateUserRequestDTO import CreateUserRequestDTO
 from app.Modules.Users.Dto.UpdateUserRequestDTO import UpdateUserRequestDTO
 
 from .UserService import IUserService
-from .Dependencies import GetUserService
+from .Dependencies import GetReadOnlyUserService, GetUserService
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -24,7 +24,7 @@ async def Create(
 @router.get("")
 async def GetAll(
     _: CurrentUser = Depends(Authorize(Role="Admin")),
-    service: IUserService = Depends(GetUserService),
+    service: IUserService = Depends(GetReadOnlyUserService),
     page: int = Query(1, ge=1, alias="Page"),
     page_size: int = Query(10, ge=1, le=100, alias="PageSize"),
     search: str | None = Query(None, alias="Search"),
@@ -46,7 +46,7 @@ async def GetAll(
 @router.get("/me")
 async def GetMe(
     current: CurrentUser = Depends(Authorize()),
-    service: IUserService = Depends(GetUserService),
+    service: IUserService = Depends(GetReadOnlyUserService),
 ):
     user = await service.GetMe(current)
     return ResponseFactory.Ok(user)
@@ -56,7 +56,7 @@ async def GetMe(
 async def GetById(
     id: int,
     _: CurrentUser = Depends(Authorize(Role="Admin")),
-    service: IUserService = Depends(GetUserService),
+    service: IUserService = Depends(GetReadOnlyUserService),
 ):
     user = await service.GetById(id)
     return ResponseFactory.Ok(user)
