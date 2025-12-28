@@ -2,22 +2,22 @@ from app.Core.Utils.QueryRequest import QuerySpecification, SortOption
 from app.Infrastructure.Database.QuerySpecificationBuilder import (
     SpecificationBuilder,
 )
-from app.Infrastructure.Database.Schema.UserSchema import UserSchema
+from app.Modules.Users.Entity.User import User
 
 
 class UserSpecification:
     SortableFields = {
-        "id": UserSchema.id,
-        "email": UserSchema.email,
-        "name": UserSchema.name,
-        "role": UserSchema.role,
+        "id": User.Id,
+        "email": User.Email,
+        "name": User.Name,
+        "role": User.Role,
     }
 
     Builder = SpecificationBuilder(
-        UserSchema,
+        User,
         sortable_columns=SortableFields,
-        searchable_columns=[UserSchema.email, UserSchema.name],
-        filter_builders={"role": lambda value: UserSchema.role == value},
+        searchable_columns=[User.Email, User.Name],
+        filter_builders={"role": lambda value: User.Role == value},
     )
 
     @staticmethod
