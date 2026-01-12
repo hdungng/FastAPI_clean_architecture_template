@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr
 
 
 class UpdateUserRequestDTO(BaseModel):
-    Email: Optional[EmailStr] = None
-    Name: Optional[str] = None
-    Password: Optional[str] = None
-    Role: Optional[str] = None
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = None

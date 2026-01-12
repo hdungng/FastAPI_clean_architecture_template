@@ -8,16 +8,16 @@ class UserValidator:
 
     @staticmethod
     def ValidateCreate(dto: CreateUserRequestDTO) -> None:
-        UserValidator._validate_name(dto.Name)
-        UserValidator._validate_password(dto.Password)
+        UserValidator._validate_name(dto.name)
+        UserValidator._validate_password(dto.password)
 
     @staticmethod
     def ValidateUpdate(dto: UpdateUserRequestDTO) -> None:
-        if dto.Name is not None:
-            UserValidator._validate_name(dto.Name)
-        if dto.Password is not None:
-            UserValidator._validate_password(dto.Password)
-        if dto.Role is not None and dto.Role not in UserValidator._ALLOWED_ROLES:
+        if dto.name is not None:
+            UserValidator._validate_name(dto.name)
+        if dto.password is not None:
+            UserValidator._validate_password(dto.password)
+        if dto.role is not None and dto.role not in UserValidator._ALLOWED_ROLES:
             raise AppException("Role must be one of: Admin, User")
 
     @staticmethod
