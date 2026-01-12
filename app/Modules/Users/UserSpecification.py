@@ -7,17 +7,17 @@ from app.Modules.Users.Entity.User import User
 
 class UserSpecification:
     SortableFields = {
-        "id": User.Id,
-        "email": User.Email,
-        "name": User.Name,
-        "role": User.Role,
+        "id": User.id,
+        "email": User.email,
+        "name": User.name,
+        "role": User.role,
     }
 
     Builder = SpecificationBuilder(
         User,
         sortable_columns=SortableFields,
-        searchable_columns=[User.Email, User.Name],
-        filter_builders={"role": lambda value: User.Role == value},
+        searchable_columns=[User.email, User.name],
+        filter_builders={"role": lambda value: User.role == value},
     )
 
     @staticmethod
