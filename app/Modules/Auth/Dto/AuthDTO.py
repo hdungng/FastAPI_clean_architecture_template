@@ -2,16 +2,16 @@ from pydantic import BaseModel, EmailStr
 
 
 class LoginRequest(BaseModel):
-    Email: EmailStr
-    Password: str
+    email: EmailStr
+    password: str
 
 
 class TokenResponse(BaseModel):
-    AccessToken: str
-    TokenType: str = "bearer"
+    access_token: str
+    token_type: str = "bearer"
 
 
 class RegisterRequest(BaseModel):
-    Email: EmailStr
-    Name: str
-    Password: str
+    email: EmailStr
+    name: str
+    password: str

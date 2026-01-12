@@ -19,14 +19,14 @@ class UserRepository(BaseRepository, IUserRepository):
         return UserMapper.FromEntity(user)
 
     async def GetById(self, id: int) -> User:
-        stmt = select(User).where(User.Id == id)
+        stmt = select(User).where(User.id == id)
         result = await self.Db.execute(stmt)
         model = result.scalar_one()
 
         return UserMapper.FromEntity(model)
 
     async def GetByEmail(self, email: str) -> User | None:
-        stmt = select(User).where(User.Email == email)
+        stmt = select(User).where(User.email == email)
         result = await self.Db.execute(stmt)
         model = result.scalar_one_or_none()
         if not model:
@@ -53,5 +53,5 @@ class UserRepository(BaseRepository, IUserRepository):
         return UserMapper.FromEntity(user)
 
     async def Delete(self, id: int) -> None:
-        stmt = delete(User).where(User.Id == id)
+        stmt = delete(User).where(User.id == id)
         await self.Db.execute(stmt)
