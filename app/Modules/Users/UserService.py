@@ -44,12 +44,12 @@ class UserService:
         try:
             UserValidator.ValidateCreate(dto)
 
-            existed = await self.Repository.GetByEmail(dto.Email)
+            existed = await self.Repository.GetByEmail(dto.email)
             if existed:
                 raise AppException("Email already exists")
 
             user = UserMapper.ToEntity(dto)
-            user.HashedPassword = CryptoUtil.HashPassword(dto.Password)
+            user.hashed_password = CryptoUtil.HashPassword(dto.password)
 
             saved = await self.Repository.Create(user)
             await self.UnitOfWork.Commit()
@@ -96,15 +96,15 @@ class UserService:
 
             user = await self.Repository.GetById(user_id)
 
-            if dto.Email:
-                existing = await self.Repository.GetByEmail(dto.Email)
-                if existing and existing.Id != user_id:
+            if dto.email:
+                existing = await self.Repository.GetByEmail(dto.email)
+                if existing and existing.id != user_id:
                     raise AppException("Email already exists")
 
             updated_user = UserMapper.ApplyUpdates(user, dto)
 
-            if dto.Password:
-                updated_user.HashedPassword = CryptoUtil.HashPassword(dto.Password)
+            if dto.password:
+                updated_user.hashed_password = CryptoUtil.HashPassword(dto.password)
 
             saved = await self.Repository.Update(updated_user)
             await self.UnitOfWork.Commit()

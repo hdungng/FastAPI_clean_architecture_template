@@ -18,8 +18,8 @@ class RefreshTokenRepository(IRefreshTokenRepository):
 
     async def GetByToken(self, token: str):
         stmt = select(RefreshToken).where(
-            RefreshToken.Token == token,
-            RefreshToken.IsRevoked == False,
+            RefreshToken.token == token,
+            RefreshToken.is_revoked == False,
         )
 
         result = await self.Db.execute(stmt)
@@ -31,6 +31,6 @@ class RefreshTokenRepository(IRefreshTokenRepository):
         return model
 
     async def Revoke(self, token: RefreshToken) -> None:
-        token.IsRevoked = True
+        token.is_revoked = True
         await self.Db.flush()
         await self.Db.refresh(token)

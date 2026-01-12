@@ -35,28 +35,28 @@ class AuthService:
         )
 
     async def Login(self, dto: LoginRequest) -> TokenResponse:
-        user = await self.UserRepo.GetByEmail(dto.Email)
-        if not user or not CryptoUtil.VerifyPassword(dto.Password, user.HashedPassword):
+        user = await self.UserRepo.GetByEmail(dto.email)
+        if not user or not CryptoUtil.VerifyPassword(dto.password, user.hashed_password):
             raise AppException("Invalid credentials")
 
         return TokenResponse(
-            AccessToken=self._GenerateAccessToken(user.Id, user.Role),
+            access_token=self._GenerateAccessToken(user.id, user.role),
         )
 
     async def Register(self, dto: RegisterRequest) -> TokenResponse:
-        existed = await self.UserRepo.GetByEmail(dto.Email)
+        existed = await self.UserRepo.GetByEmail(dto.email)
         if existed:
             raise AppException("Email already exists")
 
         user = AuthMapper.CreateUser(
-            email=dto.Email,
-            name=dto.Name,
-            hashed_password=CryptoUtil.HashPassword(dto.Password),
+            email=dto.email,
+            name=dto.name,
+            hashed_password=CryptoUtil.HashPassword(dto.password),
         )
 
         user = await self.UserRepo.Create(user)
         await self.UnitOfWork.Commit()
 
         return TokenResponse(
-            AccessToken=self._GenerateAccessToken(user.Id, user.Role),
+            access_token=self._GenerateAccessToken(user.id, user.role),
         )

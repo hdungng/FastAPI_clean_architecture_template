@@ -9,31 +9,31 @@ class UserMapper:
     @staticmethod
     def ToEntity(dto: CreateUserRequestDTO) -> User:
         return User(
-            Id=None,
-            Email=dto.Email,
-            Name=dto.Name,
-            HashedPassword="",
+            id=None,
+            email=dto.email,
+            name=dto.name,
+            hashed_password="",
         )
 
     @staticmethod
     def ApplyUpdates(user: User, dto: UpdateUserRequestDTO) -> User:
-        if dto.Email is not None:
-            user.Email = dto.Email
-        if dto.Name is not None:
-            user.Name = dto.Name
-        if dto.Password is not None:
-            user.HashedPassword = dto.Password
-        if dto.Role is not None:
-            user.Role = dto.Role
+        if dto.email is not None:
+            user.email = dto.email
+        if dto.name is not None:
+            user.name = dto.name
+        if dto.password is not None:
+            user.hashed_password = dto.password
+        if dto.role is not None:
+            user.role = dto.role
         return user
 
     @staticmethod
     def ToResponse(user: User) -> UserResponseDTO:
         return UserResponseDTO(
-            Id=user.Id,
-            Email=user.Email,
-            Name=user.Name or "",
-            Role=user.Role,
+            id=user.id,
+            email=user.email,
+            name=user.name or "",
+            role=user.role,
         )
 
     @staticmethod
