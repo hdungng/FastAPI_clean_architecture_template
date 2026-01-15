@@ -9,7 +9,7 @@ from .Dto.AuthDTO import (
     RegisterRequest,
     TokenResponse,
 )
-from .Dependencies import GetAuthService
+from .Dependencies import GetAuthQueryService, GetAuthService
 from .AuthService import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 @router.post("/login")
 async def Login(
     request: LoginRequest,
-    service: AuthService = Depends(GetAuthService),
+    service: AuthService = Depends(GetAuthQueryService),
 ):
     token = await service.Login(request)
     return ResponseFactory.Ok(token)

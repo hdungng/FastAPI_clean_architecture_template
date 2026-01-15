@@ -16,9 +16,12 @@ AsyncSessionLocal = sessionmaker(
 
 async def GetDb():
     async with AsyncSessionLocal() as session:
+        yield session
+
+
+async def GetReadOnlyDb():
+    async with AsyncSessionLocal() as session:
         try:
             yield session
-            await session.commit()
-        except:
+        finally:
             await session.rollback()
-            raise
